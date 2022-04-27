@@ -7,3 +7,6 @@ Create new issue in your repo and answers these questions
   -  `===`: DO NOT parse the values into same types only return true if they are same type and equal in values.
 - How to enforce your colleagues using Eslint?
 - compare `npm` vs `yarn`. What will you use in your project?
+## **npm**
+
+## **yarn**
