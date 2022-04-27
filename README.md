@@ -67,7 +67,7 @@ Please describe your design, your thought process, and your implementations, als
 - The project source code on Github
 - (optional) A deployed site (deployed on Heroku or some temporary server) for us to review. Don’t invest in the deployment process or good servers, we will only manually take a look without running any load/performance testing.
 
-### **Questions**
+## **Questions**
 
 Create new issue in your repo and answers these questions
 
