@@ -49,7 +49,7 @@ When an error happens, simply return “ERROR”, together with the cause of the
 
 Please build a simple web-based CLI interface that allows users to enter commands and displays the result (this is just an example, you could build a different UI):
 
-[https://lh4.googleusercontent.com/P5C_2U9fQ-fBdOUu_ZD8shvsS8I7Nq9KA0nnBY4dGRJrPm9mGhE6jSnV_HZy5r0lqHileH8MKmNhupVcbdQtOklFv5WC5c021qLTmX4CCa7Dzb2lhfG6lQOw-Wwves6qJAF8cRKW](https://lh4.googleusercontent.com/P5C_2U9fQ-fBdOUu_ZD8shvsS8I7Nq9KA0nnBY4dGRJrPm9mGhE6jSnV_HZy5r0lqHileH8MKmNhupVcbdQtOklFv5WC5c021qLTmX4CCa7Dzb2lhfG6lQOw-Wwves6qJAF8cRKW)
+![Alt Text](https://lh4.googleusercontent.com/P5C_2U9fQ-fBdOUu_ZD8shvsS8I7Nq9KA0nnBY4dGRJrPm9mGhE6jSnV_HZy5r0lqHileH8MKmNhupVcbdQtOklFv5WC5c021qLTmX4CCa7Dzb2lhfG6lQOw-Wwves6qJAF8cRKW)
 
 ## **Notes**
 
