@@ -1,7 +1,14 @@
 const app = Vue.createApp({
     data(){
         return{
-            count: 0
+                showBooks: true,
+                title: 'Hello There',
+                age: 45
+        }
+    },
+    methods: {
+        toggleShowBooks() {
+            this.showBooks = false
         }
     }
 })
