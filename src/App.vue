@@ -3,8 +3,9 @@
     <section class="cli">
       <section class="cli-window">
         <div id="container" v-for="textValue in inputArray" :key="textValue.count">
-          <div>{{textValue.first}}</div>
-          <div>{{textValue.last}}</div>
+          <div style="color:white">{{textValue.first}}</div>
+          <div v-if="checkErrorText(textValue.last)" style="color: red">{{textValue.last}}</div>
+          <div v-else style="color: green">{{textValue.last}}</div>
         </div>
       </section>  
       <form class="cli-input" v-on:submit="load">
@@ -22,7 +23,9 @@ export default {
     return {
       input: "",
       inputArray: [],
-      storedValue: {}
+      storedValue: {},
+      activeClass: 'active',
+      errorClass: 'text-danger'
     }
   },
   methods: {
@@ -32,7 +35,7 @@ export default {
       switch (inputArray[0]) {
         case "SET":
           if (3 != inputArray.length) {
-            this.loadInput("ERROR");
+            this.loadInput("ERROR: Cannot SET value");
           } else {
             this.setKey(inputArray[1], inputArray[2]);
           }
@@ -52,6 +55,11 @@ export default {
       textVal.count = this.inputArray.length + 1;
       this.inputArray.push(textVal);
     },
+    checkErrorText(text){
+      if(text.includes("ERROR")){
+        return true;
+      }
+    }
   }
 }
 </script>
