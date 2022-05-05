@@ -29,6 +29,10 @@ export default {
       input: "",
       inputArray: [],
       storedValue: {},
+      itemValues: {
+        value: " ",
+        type: " ",
+      },
     };
   },
   methods: {
@@ -49,13 +53,16 @@ export default {
           } else {
             if (this.storedValue[inputArray[1]] === undefined) {
               this.loadInput("ERROR: Keys does not exsist");
-            } else {
+            }
+            if (this.storedValue[inputArray[1]]["type"] === "String") {
               this.getKey(inputArray[1]);
+            } else {
+              this.loadInput("ERROR: this key belongs to a set using SREM.");
             }
           }
           break;
         case "SADD":
-          if (3 >= inputArray.length) {
+          if (3 > inputArray.length) {
             this.loadInput("ERROR: Cannot SADD value wrong syntax");
           } else {
             let dataArr = [],
@@ -72,20 +79,29 @@ export default {
                 duplicatedArr.push(inputArray[i]);
               }
             }
-            this.SADDKey(inputArray[1],dataArr);
+            this.SADDKey(inputArray[1], dataArr);
           }
+        case "SREM":
       }
     },
+    setValue(value, type) {
+      this.itemValues["value"] = value;
+      this.itemValues["type"] = type;
+    },
     setKey(key, itemValue) {
-      this.storedValue[key] = itemValue;
+      this.setValue(itemValue, "String");
+      this.storedValue[key] = this.itemValues;
       this.loadInput("OK");
+      console.log(this.storedValue[key]);
     },
     getKey(key) {
-      this.loadInput("Result: " + this.storedValue[key]);
+      this.loadInput("Result: " + this.storedValue[key]["value"]);
     },
-    SADDKey(key, itemValues) {
-      this.storedValue[key] = itemValues;
+    SADDKey(key, itemValue) {
+      this.setValue(itemValue, "Set");
+      this.storedValue[key] = this.itemValues;
       this.loadInput("OK");
+      console.log(this.storedValue[key]);
     },
     loadInput(input) {
       let textVal = {};
