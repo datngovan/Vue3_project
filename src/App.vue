@@ -3,7 +3,7 @@
     <section class="cli">
       <section class="cli-window">
         <div id="container" v-for="textValue in inputArray" :key="textValue.count">
-          <div style="color:white">{{textValue.first}}</div>
+          <div style="color:white">>{{textValue.first}}</div>
           <div v-if="checkErrorText(textValue.last)" style="color: red">{{textValue.last}}</div>
           <div v-else style="color: green">{{textValue.last}}</div>
         </div>
@@ -23,9 +23,7 @@ export default {
     return {
       input: "",
       inputArray: [],
-      storedValue: {},
-      activeClass: 'active',
-      errorClass: 'text-danger'
+      storedValue: {}
     }
   },
   methods: {
@@ -40,13 +38,24 @@ export default {
             this.setKey(inputArray[1], inputArray[2]);
           }
           break;
-        case "DEL":
-          
+        case "GET":
+          if(2 != inputArray.length){
+            this.loadInput("ERROR: Cannot GET value wrong syntax");
+          }else{
+            if(this.storedValue[inputArray[1]]===undefined){
+              this.loadInput("ERROR: Keys does not exsist")
+            }else{
+              this.getkey(inputArray[1]);
+            }
+          }
       }
     },
     setKey: function (key, itemValue) {
       this.storedValue[key] = itemValue;
       this.loadInput("OK");
+    },
+    getkey(key){
+      this.loadInput("Result: " + this.storedValue[key]);
     },
     loadInput(input){
       let textVal = {};
@@ -55,6 +64,7 @@ export default {
       textVal.count = this.inputArray.length + 1;
       this.inputArray.push(textVal);
     },
+    // check the error text return true if the string contains "ERROR".
     checkErrorText(text){
       if(text.includes("ERROR")){
         return true;
