@@ -83,9 +83,9 @@ export default {
           }
           break;
         case "SREM":
-          if(3 > inputArray.length){
+          if (3 > inputArray.length) {
             this.loadInput("ERROR: Cannot SREM values wrong syntax");
-          }else{
+          } else {
             let itemArr = [];
             for (let i = 2; i < inputArray.length; ++i) {
               itemArr.push(inputArray[i]);
@@ -93,7 +93,14 @@ export default {
             this.SREMKey(inputArray[1], itemArr);
           }
           break;
-      }
+        case "SMEMBERS":
+          if(2 != inputArray.length){
+            this.loadInput("ERROR: Cannot SMEMBERS wrong syntax");
+          }else{
+            this.SMEMBERSKey(inputArray[1]);
+          }
+          break;
+      } 
     },
     setValue(value, type) {
       this.itemValues["value"] = value;
@@ -114,21 +121,32 @@ export default {
       this.loadInput("OK");
       console.log(this.storedValue[key]);
     },
-    SREMKey (key, itemValue){
+    SREMKey(key, itemValue) {
       let dataArr = [];
-      let result ="";
+      let result = "";
       dataArr = dataArr.concat(this.storedValue[key]["value"]);
       console.log(dataArr);
-      for(let i = 0; i < itemValue.length; i++){
-        if(-1 == dataArr.indexOf(itemValue[i])){
-          result = result + " " + itemValue[i];
-        }else{
-          dataArr.splice(dataArr.indexOf(itemValue)[i], 1);
+      if (this.storedValue[key]["type"] != "Set") {
+        this.loadInput("This is not a Set");
+      } else {
+        for (let i = 0; i < itemValue.length; i++) {
+          if (-1 == dataArr.indexOf(itemValue[i])) {
+            result = result + " " + itemValue[i];
+          } else {
+            dataArr.splice(dataArr.indexOf(itemValue)[i], 1);
+          }
+        }
+        this.storedValue[key]["value"] = dataArr;
+        if (result.length > 0) {
+          this.loadInput("current value: " + "\n" + this.storedValue[key]["value"] + " " +result + " " + "is/are not removed");
         }
       }
-      this.storedValue[key]["value"] = dataArr;
-      if(result.length >0){
-        this.loadInput(result + " " + "is/are not removed");
+    },
+    SMEMBERSKey(key){
+      if(this.storedValue[key]["type"] == "Set"){
+        this.loadInput("result:" +" "+this.storedValue[key]["value"]);
+      }else{
+        this.loadInput("This is a String.");
       }
     },
     loadInput(input) {
