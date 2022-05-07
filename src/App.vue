@@ -81,7 +81,18 @@ export default {
             }
             this.SADDKey(inputArray[1], dataArr);
           }
+          break;
         case "SREM":
+          if(3 > inputArray.length){
+            this.loadInput("ERROR: Cannot SREM values wrong syntax");
+          }else{
+            let itemArr = [];
+            for (let i = 2; i < inputArray.length; ++i) {
+              itemArr.push(inputArray[i]);
+            }
+            this.SREMKey(inputArray[1], itemArr);
+          }
+          break;
       }
     },
     setValue(value, type) {
@@ -102,6 +113,23 @@ export default {
       this.storedValue[key] = this.itemValues;
       this.loadInput("OK");
       console.log(this.storedValue[key]);
+    },
+    SREMKey (key, itemValue){
+      let dataArr = [];
+      let result ="";
+      dataArr = dataArr.concat(this.storedValue[key]["value"]);
+      console.log(dataArr);
+      for(let i = 0; i < itemValue.length; i++){
+        if(-1 == dataArr.indexOf(itemValue[i])){
+          result = result + " " + itemValue[i];
+        }else{
+          dataArr.splice(dataArr.indexOf(itemValue)[i], 1);
+        }
+      }
+      this.storedValue[key]["value"] = dataArr;
+      if(result.length >0){
+        this.loadInput(result + " " + "is/are not removed");
+      }
     },
     loadInput(input) {
       let textVal = {};
