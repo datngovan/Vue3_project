@@ -92,24 +92,51 @@ export default {
           }
           break;
         case "SMEMBERS":
-          if(2 != inputArray.length){
+          if (2 != inputArray.length) {
             this.loadInput("ERROR: Cannot SMEMBERS wrong syntax");
-          }else{
+          } else {
             this.SMEMBERSKey(inputArray[1]);
           }
           break;
         case "SINTER":
-          if(3 > inputArray.length){
+          if (3 > inputArray.length) {
             this.loadInput("ERROR: Cannot SINTER wrong syntax");
-          }else{
+          } else {
             let array = [];
-            for(let i = 1; i < inputArray.length;i++){
+            for (let i = 1; i < inputArray.length; i++) {
               array.push(this.storedValue[inputArray[i]]["value"]);
             }
             this.SINTERKey(array);
           }
           break;
-      } 
+        case "KEY":
+          this.showKey();
+          break;
+        case "DEL":
+          if (2 != inputArray.length) {
+            this.loadInput("ERROR: Cannot DEL key wrong syntax");
+          } else {
+            this.DELkey(inputArray[1]);
+          }
+          break;
+        case "EXPIRE":
+          if(3 != inputArray.length){
+            this.loadInput("ERROR: Cannot set EXPIRE wrong syntax");
+          }else{
+            this.EXPIREKey(inputArray[1], parseInt(inputArray[2]));
+          }
+        case "TTL":
+          if(2 != inputArray.length){
+            this.load("ERROR: Cannot TTL wrong syntax");
+          }else{
+            this.TTLKey(inputArray[1]);
+          }
+          break;
+        case "SAVE":
+          break;
+        case "RESTORE":
+          break;
+      }
     },
     setValue(value, type) {
       this.itemValues["value"] = value;
@@ -144,33 +171,83 @@ export default {
         }
         this.storedValue[key]["value"] = dataArr;
         if (result.length > 0) {
-          this.loadInput("current value: " + "\n" + this.storedValue[key]["value"] + " and " +result + " " + "is/are not removed");
-        }else{
-           this.loadInput("current value: " + "\n" + this.storedValue[key]["value"]);
+          this.loadInput(
+            "current value: " +
+              "\n" +
+              this.storedValue[key]["value"] +
+              " and " +
+              result +
+              " " +
+              "is/are not removed"
+          );
+        } else {
+          this.loadInput(
+            "current value: " + "\n" + this.storedValue[key]["value"]
+          );
         }
       }
     },
-    SMEMBERSKey(key){
-      if(this.storedValue[key]["type"] == "Set"){
-        this.loadInput("result:" +" "+this.storedValue[key]["value"]);
-      }else{
+    SMEMBERSKey(key) {
+      if (this.storedValue[key]["type"] == "Set") {
+        this.loadInput("result:" + " " + this.storedValue[key]["value"]);
+      } else {
         this.loadInput("This is a String.");
       }
     },
-    intersectionOf2Arr(a1, a2){
-      return  a1.filter(function(n) { return a2.indexOf(n) !== -1;});
+    intersectionOf2Arr(a1, a2) {
+      return a1.filter(function (n) {
+        return a2.indexOf(n) !== -1;
+      });
     },
-    SINTERKey(arr){
-      let result =arr[0];
-      for(let i = 1; i < arr.length;i++){
+    SINTERKey(arr) {
+      let result = arr[0];
+      for (let i = 1; i < arr.length; i++) {
         result = this.intersectionOf2Arr(result, Object.values(arr[i]));
-        console.log(Object.values(arr[i]));
       }
-      if(result.length===0){
+      if (result.length === 0) {
         this.loadInput("No intersection found");
-      }else{
+      } else {
         this.loadInput("intersection array: " + result);
       }
+    },
+    showKey() {
+      let strKey = "",
+        setKey = "";
+      let array = Object.keys(this.storedValue);
+      for (let i = 0; i < array.length; i++) {
+        if (this.storedValue[array[i]]["type"] === "String") {
+          strKey += " " + array[i];
+        } else {
+          setKey += " " + array[i];
+        }
+      }
+      this.loadInput("String Key = " + strKey + " and Set Key = " + setKey);
+    },
+    DELKey(key) {
+      delete this.storedValue[key];
+      this.loadInput("OK");
+    },
+    EXPIREKey(key, time) {
+      let currentDate = new Date();
+      setTimeout(() => {
+        this.DELKey(key);
+      }, time * 1000);
+      this.storedValue[key]["timeout"] = currentDate.getSeconds() + time;
+      this.loadInput("Key " + key + " is expired after " + time +" seconds");
+    },
+    TTLKey(key){
+      let currentDate = new Date();
+      if(this.storedValue[key]["timeout"] !== undefined){
+        this.loadInput("Key "+ key+  " will be expired in " + (this.storedValue[key]["timeout"]  - currentDate.getSeconds()).toString() + " seconds");
+      }else{
+        this.loadInput("Key " + key + " does not set a expired time yet");
+      }
+    },
+    SAVE(){
+
+    },
+    RESTORE(){
+
     },
     loadInput(input) {
       let textVal = {};
