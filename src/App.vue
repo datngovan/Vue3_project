@@ -29,10 +29,7 @@ export default {
       input: "",
       inputArray: [],
       storedValue: {},
-      itemValues: {
-        value: " ",
-        type: " ",
-      },
+      itemValues: {},
     };
   },
   methods: {
@@ -80,6 +77,7 @@ export default {
               }
             }
             this.SADDKey(inputArray[1], dataArr);
+            this.itemValues = {};
           }
           break;
         case "SREM":
@@ -87,7 +85,7 @@ export default {
             this.loadInput("ERROR: Cannot SREM values wrong syntax");
           } else {
             let itemArr = [];
-            for (let i = 2; i < inputArray.length; ++i) {
+            for (let i = 2; i < inputArray.length; i++) {
               itemArr.push(inputArray[i]);
             }
             this.SREMKey(inputArray[1], itemArr);
@@ -100,6 +98,17 @@ export default {
             this.SMEMBERSKey(inputArray[1]);
           }
           break;
+        case "SINTER":
+          if(3 > inputArray.length){
+            this.loadInput("ERROR: Cannot SINTER wrong syntax");
+          }else{
+            let array = [];
+            for(let i = 1; i < inputArray.length;i++){
+              array.push(this.storedValue[inputArray[i]]["value"]);
+            }
+            this.SINTERKey(array);
+          }
+          break;
       } 
     },
     setValue(value, type) {
@@ -110,7 +119,6 @@ export default {
       this.setValue(itemValue, "String");
       this.storedValue[key] = this.itemValues;
       this.loadInput("OK");
-      console.log(this.storedValue[key]);
     },
     getKey(key) {
       this.loadInput("Result: " + this.storedValue[key]["value"]);
@@ -119,13 +127,11 @@ export default {
       this.setValue(itemValue, "Set");
       this.storedValue[key] = this.itemValues;
       this.loadInput("OK");
-      console.log(this.storedValue[key]);
     },
     SREMKey(key, itemValue) {
       let dataArr = [];
       let result = "";
       dataArr = dataArr.concat(this.storedValue[key]["value"]);
-      console.log(dataArr);
       if (this.storedValue[key]["type"] != "Set") {
         this.loadInput("This is not a Set");
       } else {
@@ -138,7 +144,9 @@ export default {
         }
         this.storedValue[key]["value"] = dataArr;
         if (result.length > 0) {
-          this.loadInput("current value: " + "\n" + this.storedValue[key]["value"] + " " +result + " " + "is/are not removed");
+          this.loadInput("current value: " + "\n" + this.storedValue[key]["value"] + " and " +result + " " + "is/are not removed");
+        }else{
+           this.loadInput("current value: " + "\n" + this.storedValue[key]["value"]);
         }
       }
     },
@@ -147,6 +155,21 @@ export default {
         this.loadInput("result:" +" "+this.storedValue[key]["value"]);
       }else{
         this.loadInput("This is a String.");
+      }
+    },
+    intersectionOf2Arr(a1, a2){
+      return  a1.filter(function(n) { return a2.indexOf(n) !== -1;});
+    },
+    SINTERKey(arr){
+      let result =arr[0];
+      for(let i = 1; i < arr.length;i++){
+        result = this.intersectionOf2Arr(result, Object.values(arr[i]));
+        console.log(Object.values(arr[i]));
+      }
+      if(result.length===0){
+        this.loadInput("No intersection found");
+      }else{
+        this.loadInput("intersection array: " + result);
       }
     },
     loadInput(input) {
