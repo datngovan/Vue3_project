@@ -42,6 +42,7 @@ export default {
             this.loadInput("ERROR: Cannot SET value");
           } else {
             this.setKey(inputArray[1], inputArray[2]);
+            this.itemValues = {};
           }
           break;
         case "GET":
@@ -133,8 +134,10 @@ export default {
           }
           break;
         case "SAVE":
+          this.SAVE();
           break;
         case "RESTORE":
+          this.RESTORE();
           break;
       }
     },
@@ -244,10 +247,16 @@ export default {
       }
     },
     SAVE(){
-
+      window.sessionStorage.removeItem("save");
+      let save = this.storedValue;
+      window.sessionStorage.setItem("save", JSON.stringify(save));
+      this.loadInput("SAVE success");
     },
     RESTORE(){
-
+      let storedValue = {};
+      storedValue = JSON.parse(window.sessionStorage.getItem("save"));
+      this.storedValue = storedValue;
+      this.loadInput("RESTORE success");
     },
     loadInput(input) {
       let textVal = {};
